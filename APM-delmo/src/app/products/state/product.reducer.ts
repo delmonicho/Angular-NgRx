@@ -1,4 +1,4 @@
-import { createAction, createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
+import {  createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 import { Product } from '../product';
 import * as AppState from '../../state/app.state';
 import * as ProductActions from './product.actions';
@@ -10,12 +10,14 @@ export interface ProductState {
     showProductCode: boolean;
     currentProduct: Product;
     products: Product[];
+    error: string;
 }
 
 const initialState: ProductState = {
     showProductCode: true,
     currentProduct: null,
-    products: []
+    products: [],
+    error: ''
 };
 
 const getProductFeatureState = createFeatureSelector<ProductState>('products');
@@ -35,6 +37,10 @@ export const getProducts = createSelector(
     state => state.products
 );
 
+export const getError = createSelector(
+    getProductFeatureState,
+    state => state.error
+);
 export const productReducer = createReducer<ProductState>(
     initialState,
     on(ProductActions.toggleProductCode, (state): ProductState => {
@@ -66,6 +72,20 @@ export const productReducer = createReducer<ProductState>(
                 description: '',
                 starRating: 0
             }
+        };
+    }),
+    on(ProductActions.loadProductsSuccess, (state, action): ProductState => {
+        return {
+            ...state,
+            products: action.products,
+            error: ''
+        };
+    }),
+    on(ProductActions.loadProductsFailure, (state, action): ProductState => {
+        return {
+            ...state,
+            products: [],
+            error: action.error
         };
     })
 );

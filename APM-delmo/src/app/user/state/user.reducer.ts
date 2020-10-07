@@ -1,6 +1,7 @@
 import { createAction, createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
 import { ProductState } from 'src/app/products/state/product.reducer';
 import { User } from '../user';
+import * as UserActions from '../state/user.actions';
 
 // Strongly type the user state
 export interface UserState {
@@ -28,9 +29,14 @@ export const getCurrentUser = createSelector(
 );
 
 // Reducer uses strongly typed state
+// HW3: modify the reducer to handle the strongly typed action
+// TODO: HW4: 
+    // - update the login component to use an async pipe
+    // - add a maskUserName$ variable in the component
+    // - subscribe in the template with an async pipe
 export const userReducer = createReducer<UserState>(
     initialState,
-    on(createAction('[User] Mask User Name'), (state): UserState => {
+    on(UserActions.toggleMaskUserName, (state): UserState => {
         console.log('original state: ' + JSON.stringify(state));
         return {
             ...state,
